@@ -3,9 +3,9 @@
 namespace kekaadrenalin\vue;
 
 /**
- * This is just an example.
+ * This is vue-component widget
  */
-class AutoloadExample extends \yii\base\Widget
+class VueComponent extends \yii\base\Widget
 {
     public function run()
     {
