@@ -19,14 +19,14 @@ class VueAsset extends AssetBundle
     /**
      * @inheritdoc
      */
-    public $sourcePath = '@bower/vue/dist';
+    public $sourcePath = '@bower';
 
     /**
      * @inheritdoc
      */
     public $js = [
-        YII_ENV_DEV ? 'vue.js' : 'vue.min.js',
-        YII_ENV_DEV ? 'vuex.js' : 'vuex.min.js',
+        YII_ENV_DEV ? 'vue/dist/vue.js' : 'vue/dist/vue.min.js',
+        YII_ENV_DEV ? 'vuex/dist/vuex.js' : 'vuex/dist/vuex.min.js',
     ];
 
     /**
