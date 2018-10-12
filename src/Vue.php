@@ -25,6 +25,11 @@ class Vue extends Widget
     public $data;
 
     /**
+     * @var string The name of var for vuex Store
+     */
+    public $store = '_vmStore';
+
+    /**
      * @var array The options for the Vue.js
      */
     public $clientOptions = [];
@@ -85,6 +90,9 @@ class Vue extends Widget
     {
         if (!isset($this->clientOptions['el'])) {
             $this->clientOptions['el'] = "#{$this->getId()}";
+        }
+        if (is_string($this->store)) {
+            $this->clientOptions['store'] = $this->store;
         }
         $this->initData();
     }

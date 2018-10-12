@@ -14,26 +14,24 @@ use yii\web\AssetBundle;
  * @license BSD-3-Clause
  * @package kekaadrenalin\vue
  */
-class VueAsset extends AssetBundle
+class VuexAsset extends AssetBundle
 {
     /**
      * @inheritdoc
      */
-    public $sourcePath = '@bower/vue/dist';
+    public $sourcePath = '@bower/vuex/dist';
 
     /**
      * @inheritdoc
      */
     public $js = [
-        YII_ENV_DEV ? 'vue.js' : 'vue.min.js',
+        YII_ENV_DEV ? 'vuex.js' : 'vuex.min.js',
     ];
 
     /**
      * @inheritdoc
      */
     public $depends = [
-        'yii\web\YiiAsset',
-        'yii\bootstrap\BootstrapAsset',
-        'yii\bootstrap\BootstrapPluginAsset',
+        'kekaadrenalin\vue\VueAsset',
     ];
 }

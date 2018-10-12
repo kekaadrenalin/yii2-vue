@@ -28,7 +28,17 @@ Usage
 Once the extension is installed, simply use it in your code by  :
 
 ```php
-<?php kekaadrenalin\vue\VueComponent::begin([
+<?php \kekaadrenalin\vue\Vuex::widget([
+    'store' => [
+        'state'     => [
+            'count' => 0,
+        ],
+        'mutations' => [
+            'increment' => new \yii\web\JsExpression('function(state) { state.count++ }'),
+        ],
+    ],
+ ]); ?>
+<?php \kekaadrenalin\vue\VueComponent::begin([
     'id'       => "vue-app",
     'data'     => [
         'message' => "hello",
@@ -55,7 +65,7 @@ Once the extension is installed, simply use it in your code by  :
 
         <input v-model="message">
     </div>
-<?php kekaadrenalin\vue\VueComponent::end(); ?>
+<?php \kekaadrenalin\vue\VueComponent::end(); ?>
 
 <vue-app :lar="2"></vue-app>
 ```
