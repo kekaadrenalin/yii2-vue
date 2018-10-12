@@ -1,9 +1,14 @@
 {
     "name": "kekaadrenalin/yii2-vue",
     "description": "This is the Vue.js extension for Yii2.",
+    "homepage": "https://github.com/kekaadrenalin/yii2-vue",
     "type": "yii2-extension",
     "keywords": ["yii2","extension","vue","vuejs","yii2-vue","yii2-vuejs"],
     "license": "BSD-3-Clause",
+    "support": {
+        "source": "https://github.com/kekaadrenalin/yii2-vue",
+        "issues": "https://github.com/kekaadrenalin/yii2-vue/issues"
+    },
     "authors": [
         {
             "name": "kekaadrenalin",
