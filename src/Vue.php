@@ -123,6 +123,8 @@ class Vue extends Widget
         VueAsset::register($this->getView());
 
         $options = Json::htmlEncode($this->clientOptions);
+        $options = str_replace("\"store\":\"{$this->store}\"", "\"store\":{$this->store}", $options);
+
         $js = "var vm = new Vue({$options});";
         $this->getView()->registerJs($js, View::POS_END);
     }
