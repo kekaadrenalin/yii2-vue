@@ -1,0 +1,28 @@
+{
+    "name": "kekaadrenalin/yii2-vue",
+    "description": "This is the Vue.js extension for Yii2.",
+    "type": "yii2-extension",
+    "keywords": ["yii2","extension","vue","vuejs","yii2-vue","yii2-vuejs"],
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "kekaadrenalin",
+            "email": "kekapor@outlook.com"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "~2.0.15",
+        "npm-asset/vue": "~2.5.17"
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "kekaadrenalin\\vue\\": "src"
+        }
+    }
+}
