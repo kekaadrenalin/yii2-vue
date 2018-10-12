@@ -13,7 +13,7 @@ use yii\helpers\Json;
 
 /**
  * This is vue-app widget
- * 
+ *
  * Class Vue
  * @package kekaadrenalin\vue
  */
@@ -33,6 +33,28 @@ class Vue extends Widget
      * @var array The HTML tag attributes for the widget container tag
      */
     public $options = [];
+
+    /**
+     * @inheritdoc
+     */
+    public static function begin($config = [])
+    {
+        $object = parent::begin($config);
+
+        echo Html::beginTag('div', $object->options);
+
+        return $object;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function end()
+    {
+        echo Html::endTag('div');
+
+        return parent::end();
+    }
 
     /**
      * Initializes the Vue.js
@@ -93,29 +115,7 @@ class Vue extends Widget
         VueAsset::register($this->getView());
 
         $options = Json::htmlEncode($this->clientOptions);
-        $js = "var vm = new Vue({$options})";
+        $js = "var vm = new Vue({$options});";
         $this->getView()->registerJs($js, View::POS_END);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public static function begin($config = [])
-    {
-        $object = parent::begin($config);
-
-        echo Html::beginTag('div', $object->options);
-
-        return $object;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public static function end()
-    {
-        echo Html::endTag('div');
-
-        return parent::end();
     }
 }
