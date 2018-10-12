@@ -26,6 +26,7 @@ class VueAsset extends AssetBundle
      */
     public $js = [
         YII_ENV_DEV ? 'vue.js' : 'vue.min.js',
+        YII_ENV_DEV ? 'vuex.js' : 'vuex.min.js',
     ];
 
     /**

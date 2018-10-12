@@ -1,6 +1,6 @@
 Vue.js Extension for Yii2
 =========================
-This is the Vue.js extension for Yii2.
+This is the Vue.js + Vuex extension for Yii2.
 
 Installation
 ------------
@@ -55,6 +55,7 @@ Once the extension is installed, simply use it in your code by  :
 
         <input v-model="message">
     </div>
-<?php kekaadrenalin\vue\VueComponent::end(); ?>```
+<?php kekaadrenalin\vue\VueComponent::end(); ?>
 
 <vue-app :lar="2"></vue-app>
+```

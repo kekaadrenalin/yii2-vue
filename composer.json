@@ -3,7 +3,7 @@
     "description": "This is the Vue.js extension for Yii2.",
     "homepage": "https://github.com/kekaadrenalin/yii2-vue",
     "type": "yii2-extension",
-    "keywords": ["yii2","extension","vue","vuejs","yii2-vue","yii2-vuejs"],
+    "keywords": ["yii2","extension","vue","vuejs","vuex","yii2-vue","yii2-vuejs"],
     "license": "BSD-3-Clause",
     "support": {
         "source": "https://github.com/kekaadrenalin/yii2-vue",
@@ -17,7 +17,8 @@
     ],
     "require": {
         "yiisoft/yii2": "~2.0.15",
-        "bower-asset/vue": "~2.5.17"
+        "bower-asset/vue": "~2.5.17",
+        "bower-asset/vuex": "~3.0.1"
     },
     "repositories": [
         {
