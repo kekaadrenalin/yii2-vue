@@ -25,6 +25,11 @@ class Vue extends Widget
     public $data;
 
     /**
+     * @var string The name of var for Vue
+     */
+    public $name = '_vm';
+
+    /**
      * @var string The name of var for vuex Store
      */
     public $store = '_vmStore';
@@ -81,6 +86,10 @@ class Vue extends Widget
         if (!isset($this->options['id'])) {
             $this->options['id'] = $this->getId();
         }
+
+        if (!$this->name) {
+            $this->name = '_vm';
+        }
     }
 
     /**
@@ -125,7 +134,7 @@ class Vue extends Widget
         $options = Json::htmlEncode($this->clientOptions);
         $options = str_replace("\"store\":\"{$this->store}\"", "\"store\":{$this->store}", $options);
 
-        $js = "var vm = new Vue({$options});";
+        $js = "var {$this->name} = new Vue({$options});";
         $this->getView()->registerJs($js, View::POS_END);
     }
 }
