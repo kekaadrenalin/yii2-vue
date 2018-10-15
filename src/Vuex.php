@@ -2,56 +2,52 @@
 
 namespace kekaadrenalin\vue;
 
-use yii\base\Widget;
-use yii\base\InvalidConfigException;
+use Yii;
 
 use yii\web\View;
-use yii\web\JsExpression;
-
-use yii\helpers\Html;
 use yii\helpers\Json;
+use yii\base\BaseObject;
 
 /**
- * This is vuex-app widget
+ * This is vuex-app class
  *
  * Class Vuex
  * @package kekaadrenalin\vue
  */
-class Vuex extends Widget
+class Vuex extends BaseObject
 {
     /**
-     * @var array The vuex Store
+     * @var array Vuex modules
      */
-    public $store;
+    public $modules = [];
 
     /**
-     * @var string The name of var for vuex Store
+     * Vuex constructor.
+     *
+     * @param array $modules
+     * @param array $config
      */
-    public $name = '_vmStore';
-
-    /**
-     * Initializes the Vuex.js
-     */
-    public function init()
+    public function __construct($modules = [], array $config = [])
     {
-        parent::init();
+        $this->modules = $modules;
 
-        if (!$this->name) {
-            $this->name = '_vmStore';
-        }
-
-        $this->registerJs();
+        parent::__construct($config);
     }
 
     /**
-     * Registers a specific asset bundles
+     * Registers a specific JS code
      */
-    protected function registerJs()
+    public function renderJS()
     {
-        VuexAsset::register($this->getView());
+        $name = Yii::$app->vue->storeName;
+        $options = [
+            'namespaced' => true,
+            'modules'    => $this->modules,
+        ];
 
-        $options = Json::htmlEncode($this->store);
-        $js = "var {$this->name} = new Vuex.Store({$options});";
-        $this->getView()->registerJs($js, View::POS_END);
+        $options = Json::htmlEncode($options);
+
+        $js = "var {$name} = new Vuex.Store({$options});";
+        Yii::$app->view->registerJs($js, View::POS_END);
     }
 }

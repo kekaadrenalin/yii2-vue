@@ -4,7 +4,7 @@ namespace kekaadrenalin\vue;
 
 use Yii;
 
-use yii\base\Widget;
+use yii\base\BaseObject;
 use yii\base\InvalidConfigException;
 
 use yii\web\View;
@@ -17,84 +17,115 @@ use yii\helpers\Json;
  * This is vue-component widget
  *
  * Class VueComponent
+ *
  * @package kekaadrenalin\vue
  */
-class VueComponent extends Widget
+class VueComponent extends BaseObject
 {
     /**
-     * @var array The props object for the Vue instance
+     * @var array The props object for the Vue component instance
      */
     public $props;
 
     /**
-     * @var array The watch object for the Vue instance
+     * @var array The watch object for the Vue component instance
      */
     public $watch;
 
     /**
-     * @var array The computed object for the Vue instance
+     * @var array The computed object for the Vue component instance
      */
     public $computed;
 
     /**
-     * @var array The methods object for the Vue instance
+     * @var array The methods object for the Vue component instance
      */
     public $methods;
 
     /**
-     * @var array The created object for the Vue instance
+     * @var array The created object for the Vue component instance
      */
     public $created;
 
     /**
-     * @var array The data object for the Vue instance
+     * @var array The data object for the Vue component instance
      */
     public $data;
 
     /**
-     * @var array The options for the Vue.js
+     * @var string The ID for the Vue component instance
      */
-    public $options = [];
+    public $id;
 
     /**
-     * @inheritdoc
+     * @var bool Is view?
      */
-    public static function begin($config = [])
+    public $isView = false;
+
+    /**
+     * @var array The options for component
+     */
+    protected $_options = [];
+
+    /**
+     * Render component's template
+     *
+     * @param string $viewFile
+     * @param array  $params
+     * @param null   $context
+     */
+    public function render($viewFile = '', $params = [], $context = null)
     {
-        $widget = parent::begin($config);
+        if ($this->isView) {
+            return;
+        }
 
-        ob_start();
+        $content = Yii::$app->view->render($viewFile, $params, $context);
 
-        return $widget;
+        $this->renderTemplate($content);
     }
 
     /**
-     * @inheritdoc
+     * Render template
+     *
+     * @param $content
      */
-    public static function end()
+    protected function renderTemplate($content)
     {
-        $content = ob_get_clean();
-        $widget = self::$stack[count(self::$stack) - 1];
-        $view = $widget->getView();
-
+        $view = Yii::$app->view;
         $options = [
-            'id'   => $widget->id,
+            'id'   => $this->id,
             'type' => 'text/x-template',
         ];
 
-        $view->beginBlock("vm-t-{$widget->id}");
+        $this->isView = true;
+        $template = Html::tag('script', $content, $options);
 
-        echo Html::beginTag('script', $options);
-        echo $content;
-        echo Html::endTag('script');
-
-        $view->endBlock();
-
-        $view->on(View::EVENT_END_BODY, function () use ($view, $widget) {
-            echo $view->blocks["vm-t-{$widget->id}"];
+        $view->on(View::EVENT_END_BODY, function () use ($template) {
+            echo $template;
         });
+    }
 
-        return parent::end();
+    /**
+     * Begin component's template
+     */
+    public function begin()
+    {
+        ob_start();
+    }
+
+    /**
+     * End component's template
+     */
+    public function end()
+    {
+        $content = ob_get_clean();
+
+        if ($this->isView) {
+            return;
+        }
+
+        $this->renderTemplate($content);
     }
 
     /**
@@ -106,6 +137,8 @@ class VueComponent extends Widget
 
         $this->initOptions();
         $this->registerJs();
+
+        return $this;
     }
 
     /**
@@ -113,7 +146,11 @@ class VueComponent extends Widget
      */
     protected function initOptions()
     {
-        $this->options['template'] = '#' . $this->getId();
+        if (!$this->id) {
+            $this->id = 'vm-component-' . count(Yii::$app->vue->component);
+        }
+
+        $this->_options['template'] = '#' . $this->id;
 
         $this->initData();
         $this->initProps();
@@ -140,13 +177,11 @@ class VueComponent extends Widget
             throw new InvalidConfigException('The "data" option can only be a string or an array');
         }
 
-        $this->options['data'] = new JsExpression('function(){ return ' . $data . '; }');
+        $this->_options['data'] = new JsExpression('function(){ return ' . $data . '; }');
     }
 
     /**
      * Initializes props to be mixed into the Vue instance.
-     *
-     * @throws InvalidConfigException
      */
     protected function initProps()
     {
@@ -156,7 +191,7 @@ class VueComponent extends Widget
 
         foreach ($this->props as $propName => $handler) {
             $prop = $handler instanceof JsExpression ? $handler : new JsExpression($handler);
-            $this->options['props'][$propName] = $prop;
+            $this->_options['props'][$propName] = $prop;
         }
     }
 
@@ -177,7 +212,7 @@ class VueComponent extends Widget
 
         foreach ($this->watch as $watchName => $handler) {
             $function = $handler instanceof JsExpression ? $handler : new JsExpression($handler);
-            $this->options['watch'][$watchName] = $function;
+            $this->_options['watch'][$watchName] = $function;
         }
     }
 
@@ -200,15 +235,15 @@ class VueComponent extends Widget
             if (is_array($callback)) {
                 if (isset($callback['get'])) {
                     $function = $callback['get'] instanceof JsExpression ? $callback['get'] : new JsExpression($callback['get']);
-                    $this->options['computed'][$key]['get'] = $function;
+                    $this->_options['computed'][$key]['get'] = $function;
                 }
                 if (isset($callback['set'])) {
                     $function = $callback['set'] instanceof JsExpression ? $callback['set'] : new JsExpression($callback['set']);
-                    $this->options['computed'][$key]['set'] = $function;
+                    $this->_options['computed'][$key]['set'] = $function;
                 }
             } else {
                 $function = $callback instanceof JsExpression ? $callback : new JsExpression($callback);
-                $this->options['computed'][$key] = $function;
+                $this->_options['computed'][$key] = $function;
             }
         }
     }
@@ -230,7 +265,7 @@ class VueComponent extends Widget
 
         foreach ($this->methods as $methodName => $handler) {
             $function = $handler instanceof JsExpression ? $handler : new JsExpression($handler);
-            $this->options['methods'][$methodName] = $function;
+            $this->_options['methods'][$methodName] = $function;
         }
     }
 
@@ -246,9 +281,9 @@ class VueComponent extends Widget
         }
 
         if ($this->created instanceof JsExpression) {
-            $this->options['created'] = $this->created;
+            $this->_options['created'] = $this->created;
         } elseif (is_string($this->created)) {
-            $this->options['created'] = new JsExpression($this->created);
+            $this->_options['created'] = new JsExpression($this->created);
         } else {
             throw new InvalidConfigException('The "created" option can only be a string or instanceof JsExpression');
         }
@@ -259,11 +294,11 @@ class VueComponent extends Widget
      */
     protected function registerJs()
     {
-        VueAsset::register($this->getView());
+        $options = Json::encode($this->_options);
 
-        $options = Json::encode($this->options);
-        $js = "Vue.component('{$this->getId()}', {$options});";
-        $this->getView()->registerJs($js, View::POS_END);
+        $js = "Vue.component('{$this->id}', {$options});";
+
+        Yii::$app->view->registerJs($js, View::POS_END);
     }
 }
 

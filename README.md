@@ -21,51 +21,63 @@ or add
 
 to the require section of your `composer.json` file.
 
+Add a new component to the components section of the application configuration file :
+```
+'components' => [
+    'vue' => [
+        'class' => 'kekaadrenalin\vue\GlobalComponent',
+    ],
+    // ...
+],
+```
 
 Usage
 -----
 
 Once the extension is installed, simply use it in your code by  :
 
+@app/views/layouts/main.php
 ```php
-<?php \kekaadrenalin\vue\Vuex::widget([
+<?php $vueRoot = Yii::$app->vue->root([
+    'el' => [
+        'id'    => 'global-vue-container',
+        'class' => 'contents',
+    ],
+
+    'options' => [
+        'data' => false,
+    ],
+
     'store' => [
-        'state'     => [
-            'count' => 0,
+        'main' => [
+            'state'     => [
+                'count' => 0,
+            ],
+            'mutations' => [
+                'increment' => new \yii\web\JsExpression('function(state) { state.count++ }'),
+            ],
         ],
-        'mutations' => [
-            'increment' => new \yii\web\JsExpression('function(state) { state.count++ }'),
-        ],
     ],
- ]); ?>
-<?php \kekaadrenalin\vue\VueComponent::begin([
-    'id'       => "vue-app",
-    'data'     => [
-        'message' => "hello",
+]) ?>
+
+<?php $vueRoot->begin() ?>
+    <?= $content ?>
+<?php $vueRoot->end() ?>
+```
+
+@app/views/site/index.php
+```php
+<?php $component = Yii::$app->vue->component([
+    'id'   => 'Test',
+    'data' => [
+        'message' => '',
     ],
-    'props'    => [
-        'lar' => '{type: Number, default: 200}',
-    ],
-    'watch'    => [
-        'message' => 'function(val) {console.log(val)}',
-    ],
-    'computed' => [
-        'length' => 'function() {return this.message.length}',
-    ],
-    'methods'  => [
-        'reverseMessage' => "function() {this.message = this.message.split('').reverse().join('')}",
-    ],
-    'created'  => "function() {console.log('create')}",
 ]); ?>
-    <div>
-        <p>{{ length * lar }}</p>
-        <p>{{ message }}</p>
 
-        <button @click="reverseMessage">Reverse Message</button>
-
-        <input v-model="message">
-    </div>
-<?php \kekaadrenalin\vue\VueComponent::end(); ?>
-
-<vue-app :lar="2"></vue-app>
+<?php $component->begin(); ?>
+<div>
+    <p>{{ message }}</p>
+    <input v-model="message">
+</div>
+<?php $component->end(); ?>
 ```
