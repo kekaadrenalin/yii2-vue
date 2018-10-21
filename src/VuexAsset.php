@@ -25,6 +25,7 @@ class VuexAsset extends AssetBundle
      * @inheritdoc
      */
     public $js = [
+        'https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js',
         YII_ENV_DEV ? 'vuex.js' : 'vuex.min.js',
     ];
 
