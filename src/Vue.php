@@ -38,6 +38,11 @@ class Vue extends BaseObject
     public $elOptions = [];
 
     /**
+     * @var array The Vuex modules objects
+     */
+    public $store = [];
+
+    /**
      * @var array Vue options object
      */
     protected $vueOptions = [];
@@ -85,24 +90,6 @@ class Vue extends BaseObject
     }
 
     /**
-     * Begin root's template
-     */
-    public function begin()
-    {
-        ob_start();
-    }
-
-    /**
-     * End root's template
-     */
-    public function end()
-    {
-        $content = ob_get_clean();
-
-        echo Html::tag('div', $content, $this->elOptions);
-    }
-
-    /**
      * Initializes the options for the Vue object
      */
     protected function initOptions()
@@ -115,7 +102,6 @@ class Vue extends BaseObject
 
         $this->initVarName();
         $this->initData();
-        $this->initStore();
     }
 
     /**
@@ -149,12 +135,31 @@ class Vue extends BaseObject
     }
 
     /**
-     * Initializes the store object for the Vue instance
+     * Begin root's template
      */
-    protected function initStore()
+    public function begin()
     {
-        if (count(Yii::$app->vue->store)) {
-            $this->storeName = Yii::$app->vue->storeName;
+        ob_start();
+    }
+
+    /**
+     * End root's template
+     */
+    public function end()
+    {
+        $content = ob_get_clean();
+
+        echo Html::tag('div', $content, $this->elOptions);
+    }
+
+    /**
+     * @param string $js
+     */
+    public function addVuexModule($js = '')
+    {
+        $this->store[] = new JsExpression($js);
+
+        if (!isset($this->vueOptions['store'])){
             $this->vueOptions['store'] = $this->storeName;
         }
     }

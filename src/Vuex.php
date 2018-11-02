@@ -17,9 +17,9 @@ use yii\base\BaseObject;
 class Vuex extends BaseObject
 {
     /**
-     * @var array Vuex modules
+     * @var string Vuex modules as string
      */
-    public $modules = [];
+    protected $_modules = '';
 
     /**
      * Vuex constructor.
@@ -29,7 +29,7 @@ class Vuex extends BaseObject
      */
     public function __construct($modules = [], array $config = [])
     {
-        $this->modules = $modules;
+        $this->_modules = implode(',', $modules);
 
         parent::__construct($config);
     }
@@ -40,12 +40,7 @@ class Vuex extends BaseObject
     public function renderJS()
     {
         $name = Yii::$app->vue->storeName;
-        $options = [
-            'namespaced' => true,
-            'modules'    => $this->modules,
-        ];
-
-        $options = Json::htmlEncode($options);
+        $options = "{modules: $this->_modules}";
 
         $js = "var {$name} = new Vuex.Store({$options});";
         Yii::$app->view->registerJs($js, View::POS_END);

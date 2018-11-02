@@ -30,11 +30,6 @@ class GlobalComponent extends Component
     public $component = [];
 
     /**
-     * @var array The Vuex object
-     */
-    public $store = [];
-
-    /**
      * @var string The Var name for Vuex store
      */
     public $storeName = '_vmStore';
@@ -73,10 +68,6 @@ class GlobalComponent extends Component
             throw new InvalidConfigException('Parameter "options" is missing.');
         }
 
-        if (isset($options['store'])) {
-            $this->store = ArrayHelper::merge($this->store, $options['store']);
-        }
-
         $id = $elOptions['id'];
 
         $vue = new Vue($id, $options['options'], $elOptions);
@@ -107,12 +98,14 @@ class GlobalComponent extends Component
      */
     protected function renderVuex()
     {
-        if (count($this->store)) {
-            VuexAsset::register(Yii::$app->view);
-        }
+        foreach ($this->vue as $id => $vue) {
+            if (count($vue->store)) {
+                VuexAsset::register(Yii::$app->view);
 
-        $store = new Vuex($this->store);
-        $store->renderJS();
+                $store = new Vuex($vue->store);
+                $store->renderJS();
+            }
+        }
     }
 
     /**
