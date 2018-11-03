@@ -15,6 +15,9 @@ use yii\base\Component;
  *
  * Class VueComponent
  *
+ * @link    https://github.com/kekaadrenalin/yii2-vue
+ * @author  kekaadrenalin <kekapor@outlook.com>
+ * @license BSD-3-Clause
  * @package kekaadrenalin\vue
  */
 class GlobalComponent extends Component

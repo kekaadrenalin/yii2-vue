@@ -18,7 +18,8 @@
     "require": {
         "yiisoft/yii2": "~2.0.15",
         "bower-asset/vue": "~2.5.17",
-        "bower-asset/vuex": "~3.0.1"
+        "bower-asset/vuex": "~3.0.1",
+        "bower-asset/es6-promise": "~4.2.4"
     },
     "repositories": [
         {

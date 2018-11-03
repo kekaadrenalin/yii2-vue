@@ -9,7 +9,7 @@ use yii\web\AssetBundle;
  *
  * Registers Vue.js
  *
- * @link    https://github.com/antkaz/yii2-vue
+ * @link    https://github.com/kekaadrenalin/yii2-vue
  * @author  kekaadrenalin <kekapor@outlook.com>
  * @license BSD-3-Clause
  * @package kekaadrenalin\vue

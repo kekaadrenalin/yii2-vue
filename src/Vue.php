@@ -18,6 +18,10 @@ use yii\helpers\StringHelper;
  * This is vue-root class
  *
  * Class Vue
+ *
+ * @link    https://github.com/kekaadrenalin/yii2-vue
+ * @author  kekaadrenalin <kekapor@outlook.com>
+ * @license BSD-3-Clause
  * @package kekaadrenalin\vue
  */
 class Vue extends BaseObject
